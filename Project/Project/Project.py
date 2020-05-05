@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
-
+import os
 
 class App(QApplication):
 
@@ -62,7 +62,8 @@ class App(QApplication):
         file_dialog = QFileDialog()
         if file_dialog.exec_():
             filename = file_dialog.selectedFiles()
-            self.file_name.setText(filename[0])
+            file_name = os.path.basename(filename[0])
+            self.file_name.setText(file_name)
 
     def select_mode(self, i):
         self.mode = self.mode_combo_box.currentText()
