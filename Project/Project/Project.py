@@ -1,72 +1,72 @@
-import kivy
-from kivy.app import App
-from kivy.uix.label import Label
-from kivy.uix.textinput import TextInput
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.config import Config
-from kivy.uix.dropdown import DropDown
-
-import json
-from base64 import b64encode
-from Crypto.Cipher import AES
-from Crypto.Random import get_random_bytes
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
 
 
+class App(QApplication):
 
-class MyApp(App):
+    def __init__(self):
+        super(App, self).__init__(sys.argv)
+        self.window = QWidget()
+     
+        self.mode = None
+        self.window.setWindowTitle("Application")
+        self.window.setFixedSize(300, 300)
 
-    def build(self):
-        Config.set('graphics', 'width', '900')
-        Config.set('graphics', 'height', '300')
-        Config.write()
-        self.box = BoxLayout(orientation='horizontal', spacing=10)
-        self.button_box = BoxLayout(orientation = 'vertical',pos_hint = {'top':1}, spacing=10, size_hint=(0.2,0.4))
-        self.plain_text = TextInput(hint_text='Wpisz tekst do zaszyfrowania',  pos_hint = {'top':1}, size_hint=(.5,.4))
-        self.cipher_text = TextInput(hint_text='Wpisz tekst do odszyfrowania',  pos_hint = {'top':1}, size_hint=(.5,.4))
-        self.dropdown = DropDown()
-        btn = Button(text = 'CBC', size_hint_y=None, height = 35)
-        btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
-        self.dropdown.add_widget(btn)
-        btn = Button(text = 'ECB', size_hint_y=None, height = 35)
-        btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
-        self.dropdown.add_widget(btn)
-        btn = Button(text = 'CTR', size_hint_y=None, height = 35)
-        btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
-        self.drop_down_button = Button(text='Tryb', size_hint=(1, .5))
-        self.drop_down_button.bind(on_release=self.dropdown.open)
-        self.dropdown.bind(on_select=lambda instance, x: setattr(self.drop_down_button, 'text', x))
-        self.dropdown.add_widget(btn)
-        self.code_button = Button(text='Koduj', pos_hint = {'top':1}, on_press=self.code, size_hint=(1,.5))
-        self.decode_button = Button(text='Dekoduj',  pos_hint = {'top':1}, on_press=self.decode, size_hint=(1,.5))
-        self.box.add_widget(self.plain_text)
-        self.button_box.add_widget(self.code_button)
-        self.button_box.add_widget(self.decode_button)
-        self.button_box.add_widget(self.drop_down_button)
-        self.box.add_widget(self.button_box)
-        self.box.add_widget(self.cipher_text)
-        return self.box
+        layout = QVBoxLayout(self.window)
 
-    def code(self, instance):
-        if self.drop_down_button.text == 'CBC':
-            self.cipher_text.text = ''.join(reversed(self.plain_text.text))
-        else:
-            self.cipher_text.text = 'cjuh'
+        self.choose_file_button = QPushButton("Wybierz plik")
+        self.choose_file_button.clicked.connect(self.select_file)
 
-    def decode(self, instance):
-        if self.drop_down_button.text == 'CBC':
-            self.plain_text.text = ''.join(reversed(self.cipher_text.text))
-        else:
-            self.plain_text.text = 'hjuc'
+        self.cipher_button = QPushButton("Szyfruj")
+        self.cipher_button.clicked.connect(self.cipher_method)
 
+        self.decipher_button = QPushButton("Deszyfruj")
+        self.decipher_button.clicked.connect(self.decipher_method)
 
-if __name__ == "__main__":
-    data = b"secret"
-    key = get_random_bytes(16)
-    cipher = AES.new(key, AES.MODE_CTR)
-    ct_bytes = cipher.encrypt(data)
-    nonce = b64encode(cipher.nonce).decode('utf-8')
-    ct = b64encode(ct_bytes).decode('utf-8')
-    result = json.dumps({'nonce':nonce, 'ciphertext':ct})
-    print(result)
-    MyApp().run()
+        self.mode_combo_box = QComboBox()
+        self.mode_combo_box.setEditable(True)
+        self.mode_combo_box.currentIndexChanged.connect(self.select_mode)
+        self.mode_combo_box.lineEdit().setAlignment(Qt.AlignCenter)
+        self.mode_combo_box.lineEdit().setReadOnly(True)
+        self.mode_combo_box.addItem("CDC")
+        self.mode_combo_box.addItem("ECB")
+        self.mode_combo_box.addItem("CRT")
+
+        self.file_name = QLabel("Nie wybrano pliku")
+        self.file_name.setAlignment(Qt.AlignCenter)
+
+        layout.addStretch()
+        layout.addWidget(self.file_name)
+        layout.addStretch()
+        layout.addWidget(self.choose_file_button)
+        layout.addStretch()
+        layout.addWidget(self.cipher_button)
+        layout.addStretch()
+        layout.addWidget(self.decipher_button)
+        layout.addStretch()
+        layout.addWidget(self.mode_combo_box)
+        layout.addStretch()
+        self.window.setLayout(layout)
+        
+        self.window.show()
+
+        
+    def decipher_method(self):
+        pass
+    
+    def cipher_method(self):
+        self.cipher_button.setEnabled(False)
+
+    def select_file(self):
+        file_dialog = QFileDialog()
+        if file_dialog.exec_():
+            filename = file_dialog.selectedFiles()
+            self.file_name.setText(filename[0])
+
+    def select_mode(self, i):
+        self.mode = self.mode_combo_box.currentText()
+        
+if __name__ == '__main__':
+    app = App()
+    app.exec_()
