@@ -17,5 +17,5 @@ Zaimplementowane tryby szyfrowania:
 - Output Feedback (OFB)
 
 ## Dodatkowe informacje
-[1]: Wszystkie operacje szyfrujące pochodzą z biblioteki Pycrypto.
-[2]: Klucz i wektor inicjalizujący generujemy (przy każdym uruchomieniu programu) za pomocą funkcji Random.new().read(AES.block_size). Oba mają wtedy długość 128 bitów. Nie jest możliwe odszyfrowanie pliku po ponownym uruchomieniu aplikacji.
+1. Wszystkie operacje szyfrujące pochodzą z biblioteki Pycrypto.
+2. Klucz i wektor inicjalizujący generujemy (przy każdym uruchomieniu programu) za pomocą funkcji Random.new().read(AES.block_size). Oba mają wtedy długość 128 bitów. Nie jest możliwe odszyfrowanie pliku po ponownym uruchomieniu aplikacji.
