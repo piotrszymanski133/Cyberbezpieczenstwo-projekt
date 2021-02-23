@@ -3,9 +3,9 @@
 Projekt wykonany na przedmiot Wprowadzenie do cyberbezpieczeństwa.
 
 Aplikacja została zaimplementowana w języku Python z wykorzystaniem następujących bibliotek: 
-● PyQt5 - graficzny interfejs użytkownika 
-● PyCrypto - algorytm szyfrujący AES oraz generowanie klucza i wektora inicjalizującego 
-● base64 - kodowanie bajtów i znaków
+* PyQt5 - graficzny interfejs użytkownika 
+* PyCrypto - algorytm szyfrujący AES oraz generowanie klucza i wektora inicjalizującego 
+* base64 - kodowanie bajtów i znaków
 
 Algorytmy symetryczne możemy podzielić na dwie główne kategorie: strumieniowe i blokowe. Do naszego projektu wybraliśmy szyfrowanie blokowe, a dokładniej algorytm AES (Advanced Encryption Standard) w różnych trybach.
 
